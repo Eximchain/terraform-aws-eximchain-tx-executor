@@ -71,6 +71,16 @@ resource "aws_lb_listener" "tx_executor_vault" {
   }
 }
 
+data "aws_ami" "vault_consul" {
+  most_recent = true
+  owners      = ["037794263736"]
+
+  filter {
+    name   = "name"
+    values = ["eximchain-vault-tx-executor-*"]
+  }
+}
+
 # ---------------------------------------------------------------------------------------------------------------------
 # DEPLOY THE VAULT SERVER CLUSTER
 # ---------------------------------------------------------------------------------------------------------------------
@@ -81,7 +91,7 @@ module "vault_cluster" {
   cluster_size  = "${var.vault_cluster_size}"
   instance_type = "${var.vault_instance_type}"
 
-  ami_id    = "${lookup(var.vault_amis, var.aws_region)}"
+  ami_id    = "${var.vault_consul_ami == "" ? data.aws_ami.vault_consul.id : var.vault_consul_ami}"
   user_data = "${data.template_file.user_data_vault_cluster.rendered}"
 
   s3_bucket_name          = "${aws_s3_bucket.tx_executor_vault.id}"
@@ -173,7 +183,7 @@ module "consul_cluster" {
   cluster_tag_key   = "consul-cluster"
   cluster_tag_value = "transaction-executor-consul"
 
-  ami_id    = "${lookup(var.vault_amis, var.aws_region)}"
+  ami_id    = "${var.vault_consul_ami == "" ? data.aws_ami.vault_consul.id : var.vault_consul_ami}"
   user_data = "${data.template_file.user_data_consul.rendered}"
 
   vpc_id     = "${var.aws_vpc}"

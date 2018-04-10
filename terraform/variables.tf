@@ -32,16 +32,6 @@ variable "node_volume_size" {
   default     = 50
 }
 
-variable "tx_executor_amis" {
-  description = "Mapping from AWS region to AMI ID to use for transaction executor nodes in that region"
-  type        = "map"
-}
-
-variable "vault_amis" {
-  description = "Mapping from AWS region to AMI ID to use for vault nodes in that region"
-  type        = "map"
-}
-
 # ---------------------------------------------------------------------------------------------------------------------
 # OPTIONAL PARAMETERS
 # These parameters have reasonable defaults.
@@ -56,19 +46,29 @@ variable "force_destroy_s3_buckets" {
   default     = false
 }
 
+variable "tx_executor_ami" {
+  description = "AMI ID to use for transaction executor servers. Defaults to getting the most recently built version from Eximchain"
+  default     = ""
+}
+
 variable "tx_executor_instance_type" {
   description = "The EC2 instance type to use for eximchain nodes"
   default     = "t2.medium"
 }
 
 variable "eximchain_node_ami" {
-  description = "ID of AMI to use for eximchain node. If not set, will retrieve the latest version from Eximchain."
+  description = "AMI ID to use for eximchain node. If not set, will retrieve the latest version from Eximchain."
   default     = ""
 }
 
 variable "eximchain_node_instance_type" {
   description = "The EC2 instance type to use for transaction executor nodes"
   default     = "t2.medium"
+}
+
+variable "vault_consul_ami" {
+  description = "AMI ID to use for vault and consul servers. Defaults to getting the most recently built version from Eximchain"
+  default     = ""
 }
 
 variable "vault_cluster_size" {

@@ -49,16 +49,15 @@ module "transaction_executor" {
 
   aws_vpc = "${aws_vpc.tx_executor.id}"
 
-  # AMI variables sourced from amis.auto.tfvars.json
-  tx_executor_amis   = "${var.tx_executor_amis}"
+  tx_executor_ami = "${var.tx_executor_ami}"
 }
 
 module "tx_executor_vault" {
   source = "modules/tx-executor-vault"
 
-  vault_amis      = "${var.vault_amis}"
-  cert_owner      = "${var.cert_owner}"
-  public_key_path = "${var.public_key_path}"
+  vault_consul_ami = "${var.vault_consul_ami}"
+  cert_owner       = "${var.cert_owner}"
+  public_key_path  = "${var.public_key_path}"
 
   aws_region    = "${var.aws_region}"
   vault_port    = "${var.vault_port}"

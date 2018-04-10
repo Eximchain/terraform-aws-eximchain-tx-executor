@@ -81,7 +81,7 @@ resource "aws_instance" "tx_executor" {
 
   instance_type = "${var.tx_executor_instance_type}"
 
-  ami       = "${lookup(var.tx_executor_amis, var.aws_region)}"
+  ami       = "${var.tx_executor_ami == "" ? data.aws_ami.transaction_executor.id : var.tx_executor_ami}"
   user_data = "${data.template_file.user_data_tx_executor.rendered}"
 
   key_name = "${aws_key_pair.auth.id}"
@@ -101,6 +101,16 @@ resource "aws_instance" "tx_executor" {
       "echo 'https://${var.vault_dns}:${var.vault_port}' > /opt/transaction-executor/vault-url.txt",
       "echo 'http://${var.quorum_dns}:${var.quorum_port}' > /opt/transaction-executor/quorum-url.txt"
     ]
+  }
+}
+
+data "aws_ami" "transaction_executor" {
+  most_recent = true
+  owners      = ["037794263736"]
+
+  filter {
+    name   = "name"
+    values = ["eximchain-tx-executor-*"]
   }
 }
 

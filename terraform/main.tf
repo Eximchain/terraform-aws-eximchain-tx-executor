@@ -33,10 +33,6 @@ module "transaction_executor" {
   availability_zone                  = "${var.availability_zone}"
   cert_owner                         = "${var.cert_owner}"
   force_destroy_s3_buckets           = "${var.force_destroy_s3_buckets}"
-  vault_cluster_size                 = "${var.vault_cluster_size}"
-  vault_instance_type                = "${var.vault_instance_type}"
-  consul_cluster_size                = "${var.consul_cluster_size}"
-  consul_instance_type               = "${var.consul_instance_type}"
   tx_executor_instance_type          = "${var.tx_executor_instance_type}"
 
   # Variables sourced from the vault module

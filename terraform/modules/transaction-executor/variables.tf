@@ -82,23 +82,3 @@ variable "tx_executor_instance_type" {
   description = "The EC2 instance type to use for transaction executor nodes"
   default     = "t2.medium"
 }
-
-variable "vault_cluster_size" {
-  description = "The number of instances to use in the vault cluster"
-  default     = 3
-}
-
-variable "vault_instance_type" {
-  description = "The EC2 instance type to use for vault nodes"
-  default     = "t2.micro"
-}
-
-variable "consul_cluster_size" {
-  description = "The number of instances to use in the consul cluster"
-  default     = 3
-}
-
-variable "consul_instance_type" {
-  description = "The EC2 instance type to use for consul nodes"
-  default     = "t2.micro"
-}

@@ -10,7 +10,7 @@
     "terraform_aws_vault_module_version": "v0.0.8"
   },
   "builders": [{
-    "ami_name": "quorum-vault-consul-ubuntu-{{isotime | clean_ami_name}}",
+    "ami_name": "eximchain-tx-executor-{{isotime | clean_ami_name}}",
     "ami_description": "An Ubuntu 16.04 AMI with Quorum installed, that has Vault and Consul installed to use as a client.",
     "instance_type": "t2.medium",
     "name": "ubuntu16-quorum-ami",

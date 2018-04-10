@@ -92,8 +92,7 @@ module "eximchain_node" {
   cert_owner    = "${var.cert_owner}"
   cert_org_name = "${var.cert_org_name}"
 
-  # TODO: Get these AMIs from a data source so we don't need to copy them in
-  eximchain_node_amis          = "${var.eximchain_node_amis}"
+  eximchain_node_ami           = "${var.eximchain_node_ami}"
   eximchain_node_instance_type = "${var.eximchain_node_instance_type}"
 
   aws_vpc = "${aws_vpc.tx_executor.id}"

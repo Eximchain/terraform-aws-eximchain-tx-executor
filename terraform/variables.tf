@@ -37,11 +37,6 @@ variable "tx_executor_amis" {
   type        = "map"
 }
 
-variable "eximchain_node_amis" {
-  description = "Mapping from AWS region to AMI ID to use for eximchain nodes in that region"
-  type        = "map"
-}
-
 variable "vault_amis" {
   description = "Mapping from AWS region to AMI ID to use for vault nodes in that region"
   type        = "map"
@@ -64,6 +59,11 @@ variable "force_destroy_s3_buckets" {
 variable "tx_executor_instance_type" {
   description = "The EC2 instance type to use for eximchain nodes"
   default     = "t2.medium"
+}
+
+variable "eximchain_node_ami" {
+  description = "ID of AMI to use for eximchain node. If not set, will retrieve the latest version from Eximchain."
+  default     = ""
 }
 
 variable "eximchain_node_instance_type" {

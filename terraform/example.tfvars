@@ -1,5 +1,4 @@
 public_key_path                    = "~/.ssh/quorum.pub"
-private_key_path                   = "~/.ssh/quorum"
 aws_region                         = "us-east-1"
 availability_zone                  = "us-east-1a"
 cert_owner                         = "FIXME_USER"

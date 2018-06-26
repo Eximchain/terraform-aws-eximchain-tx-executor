@@ -28,7 +28,6 @@ module "transaction_executor" {
 
   # Variables sourced from terraform.tfvars
   public_key_path                    = "${var.public_key_path}"
-  private_key_path                   = "${var.private_key_path}"
   aws_region                         = "${var.aws_region}"
   availability_zone                  = "${var.availability_zone}"
   cert_owner                         = "${var.cert_owner}"

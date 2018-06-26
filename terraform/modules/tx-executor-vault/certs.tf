@@ -75,7 +75,7 @@ resource "aws_iam_server_certificate" "vault_certs" {
 # IAM POLICY TO ACCESS CERT BUCKET
 # ---------------------------------------------------------------------------------------------------------------------
 resource "aws_iam_policy" "vault_cert_access" {
-  name        = "tx-executor-vault-cert-access"
+  name_prefix = "tx-executor-vault-cert-access-"
   description = "Allow read access to the vault cert bucket"
 
   policy = <<EOF

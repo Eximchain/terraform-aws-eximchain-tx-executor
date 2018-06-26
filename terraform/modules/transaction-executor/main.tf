@@ -19,15 +19,15 @@ provider "template" {
 # KEY PAIR FOR ALL INSTANCES
 # ---------------------------------------------------------------------------------------------------------------------
 resource "aws_key_pair" "auth" {
-  key_name   = "tx-executor"
-  public_key = "${var.public_key}"
+  key_name_prefix = "tx-executor-"
+  public_key      = "${var.public_key}"
 }
 
 # ---------------------------------------------------------------------------------------------------------------------
 # TRANSACTION EXECUTOR POLICY
 # ---------------------------------------------------------------------------------------------------------------------
 resource "aws_iam_policy" "tx_executor" {
-  name        = "eximchain-tx-executor"
+  name_prefix = "eximchain-tx-executor-"
   description = "A policy for a transaction executor"
 
   policy = <<EOF
@@ -167,7 +167,7 @@ resource "aws_security_group_rule" "tx_executor_egress" {
 # TRANSACTION EXECUTOR IAM ROLE
 # ---------------------------------------------------------------------------------------------------------------------
 resource "aws_iam_role" "tx_executor" {
-  name = "eximchain-tx-executor"
+  name_prefix = "eximchain-tx-executor-"
 
   assume_role_policy = <<EOF
 {

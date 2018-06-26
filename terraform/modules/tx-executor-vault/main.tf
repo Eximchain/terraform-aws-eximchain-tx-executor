@@ -15,8 +15,8 @@ provider "null" {
 # KEY PAIR FOR ALL INSTANCES
 # ---------------------------------------------------------------------------------------------------------------------
 resource "aws_key_pair" "auth" {
-  key_name   = "transaction-executor-key"
-  public_key = "${var.public_key}"
+  key_name_prefix = "transaction-executor-key-"
+  public_key      = "${var.public_key}"
 }
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -52,10 +52,10 @@ resource "aws_lb" "tx_executor_vault" {
 }
 
 resource "aws_lb_target_group" "tx_executor_vault" {
-  name = "vault-lb-target"
-  port = "${var.vault_port}"
-  protocol = "HTTPS"
-  vpc_id = "${var.aws_vpc}"
+  name_prefix = "vault-"
+  port        = "${var.vault_port}"
+  protocol    = "HTTPS"
+  vpc_id      = "${var.aws_vpc}"
 }
 
 resource "aws_lb_listener" "tx_executor_vault" {
@@ -112,7 +112,7 @@ module "vault_cluster" {
 # ALLOW VAULT CLUSTER TO USE AWS AUTH
 # ---------------------------------------------------------------------------------------------------------------------
 resource "aws_iam_policy" "allow_aws_auth" {
-  name        = "allow_aws_auth"
+  name_prefix = "allow-vault-aws-auth-"
   description = "Allow authentication to vault by AWS mechanisms"
 
   policy = <<EOF

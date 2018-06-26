@@ -4,6 +4,10 @@ provider "aws" {
   region  = "${var.aws_region}"
 }
 
+provider "local" {
+  version = "~> 1.1"
+}
+
 # ---------------------------------------------------------------------------------------------------------------------
 # NETWORKING
 # ---------------------------------------------------------------------------------------------------------------------
@@ -22,17 +26,29 @@ resource "aws_route" "tx_executor" {
   gateway_id             = "${aws_internet_gateway.tx_executor.id}"
 }
 
+# ---------------------------------------------------------------------------------------------------------------------
+# PUBLIC KEY FILE IF USED
+# ---------------------------------------------------------------------------------------------------------------------
+data "local_file" "public_key" {
+  count = "${var.public_key == "" ? 1 : 0}"
+
+  filename = "${var.public_key_path}"
+}
+
+# ---------------------------------------------------------------------------------------------------------------------
+# MODULES
+# ---------------------------------------------------------------------------------------------------------------------
 module "transaction_executor" {
   # Source from github if using in another project
   source = "modules/transaction-executor"
 
   # Variables sourced from terraform.tfvars
-  public_key_path                    = "${var.public_key_path}"
-  aws_region                         = "${var.aws_region}"
-  availability_zone                  = "${var.availability_zone}"
-  cert_owner                         = "${var.cert_owner}"
-  force_destroy_s3_buckets           = "${var.force_destroy_s3_buckets}"
-  tx_executor_instance_type          = "${var.tx_executor_instance_type}"
+  public_key                = "${var.public_key == "" ? join("", data.local_file.public_key.*.content) : var.public_key}"
+  aws_region                = "${var.aws_region}"
+  availability_zone         = "${var.availability_zone}"
+  cert_owner                = "${var.cert_owner}"
+  force_destroy_s3_buckets  = "${var.force_destroy_s3_buckets}"
+  tx_executor_instance_type = "${var.tx_executor_instance_type}"
 
   # Variables sourced from the vault module
   vault_dns                = "${module.tx_executor_vault.vault_dns}"
@@ -56,7 +72,7 @@ module "tx_executor_vault" {
 
   vault_consul_ami = "${var.vault_consul_ami}"
   cert_owner       = "${var.cert_owner}"
-  public_key_path  = "${var.public_key_path}"
+  public_key       = "${var.public_key == "" ? join("", data.local_file.public_key.*.content) : var.public_key}"
 
   aws_region    = "${var.aws_region}"
   vault_port    = "${var.vault_port}"
@@ -81,7 +97,7 @@ module "eximchain_node" {
   aws_region        = "${var.aws_region}"
   availability_zone = "${var.availability_zone}"
 
-  public_key_path = "${var.public_key_path}"
+  public_key    = "${var.public_key == "" ? join("", data.local_file.public_key.*.content) : var.public_key}"
   # TODO: Don't make certs if we're using an external vault
   cert_owner    = "${var.cert_owner}"
   cert_org_name = "${var.cert_org_name}"
@@ -107,6 +123,9 @@ module "eximchain_node" {
   consul_cluster_tag_value = "${module.tx_executor_vault.consul_cluster_tag_value}"
 }
 
+# ---------------------------------------------------------------------------------------------------------------------
+# POLICIES
+# ---------------------------------------------------------------------------------------------------------------------
 # Allow Eximchain node to download vault certificates
 resource "aws_iam_role_policy_attachment" "vault_cert_access" {
   role       = "${module.eximchain_node.eximchain_node_iam_role}"

@@ -10,10 +10,6 @@ variable "availability_zone" {
   description = "AWS availability zone to launch the transaction executor and eximchain node in"
 }
 
-variable "public_key_path" {
-  description = "The path to the public key that will be used to SSH the instances in this region."
-}
-
 variable "cert_owner" {
   description = "The OS user to be made the owner of the local copy of the vault certificates. Should usually be set to the user operating the tool."
 }
@@ -32,6 +28,16 @@ variable "node_volume_size" {
 # OPTIONAL PARAMETERS
 # These parameters have reasonable defaults.
 # ---------------------------------------------------------------------------------------------------------------------
+variable "public_key_path" {
+  description = "The path to the public key that will be used to SSH the instances in this region."
+  default     = ""
+}
+
+variable "public_key" {
+  description = "The path to the public key that will be used to SSH the instances in this region. Will override public_key_path if set."
+  default     = ""
+}
+
 variable "vault_port" {
   description = "The port that vault will be accessible on."
   default     = 8200

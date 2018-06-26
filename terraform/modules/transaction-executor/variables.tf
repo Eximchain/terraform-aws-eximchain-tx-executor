@@ -10,6 +10,14 @@ variable "availability_zone" {
   description = "AWS availability zone to launch the transaction executor in"
 }
 
+variable "aws_vpc" {
+  description = "The VPC to create the transaction executor in"
+}
+
+variable "public_key" {
+  description = "The public key that will be used to SSH the instances in this region."
+}
+
 variable "cert_owner" {
   description = "The OS user to be made the owner of the local copy of the vault certificates. Should usually be set to the user operating the tool."
 }
@@ -56,12 +64,6 @@ variable "quorum_port" {
   default     = 8545
 }
 
-variable "public_key" {
-  description = "The public key that will be used to SSH the instances in this region."
-}
-
-variable "aws_vpc" {
-  description = "The VPC to create the transaction executor in"
 }
 
 variable "force_destroy_s3_buckets" {

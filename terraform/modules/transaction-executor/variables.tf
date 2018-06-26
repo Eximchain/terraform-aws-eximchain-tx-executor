@@ -64,6 +64,9 @@ variable "quorum_port" {
   default     = 8545
 }
 
+variable "private_key" {
+  description = "The private key that will be used to SSH the instances in this region. Will use the agent if empty"
+  default     = ""
 }
 
 variable "force_destroy_s3_buckets" {

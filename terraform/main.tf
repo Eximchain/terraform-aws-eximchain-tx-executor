@@ -44,6 +44,7 @@ module "transaction_executor" {
 
   # Variables sourced from terraform.tfvars
   public_key                = "${var.public_key == "" ? join("", data.local_file.public_key.*.content) : var.public_key}"
+  private_key               = "${var.private_key}"
   aws_region                = "${var.aws_region}"
   availability_zone         = "${var.availability_zone}"
   cert_owner                = "${var.cert_owner}"

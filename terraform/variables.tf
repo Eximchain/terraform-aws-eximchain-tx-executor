@@ -38,6 +38,11 @@ variable "public_key" {
   default     = ""
 }
 
+variable "private_key" {
+  description = "The private key that will be used to SSH the instances in this region. Will use the agent if empty"
+  default     = ""
+}
+
 variable "vault_port" {
   description = "The port that vault will be accessible on."
   default     = 8200

@@ -76,7 +76,8 @@ resource "aws_instance" "tx_executor" {
     # The default username for our AMI
     user = "ubuntu"
 
-    # The connection will use the local SSH agent for authentication.
+    # The connection will use the local SSH agent for authentication if this is empty.
+    private_key = "${var.private_key}"
   }
 
   instance_type = "${var.tx_executor_instance_type}"

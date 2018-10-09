@@ -35,20 +35,13 @@ resource "aws_subnet" "vault" {
 }
 
 # ---------------------------------------------------------------------------------------------------------------------
-# S3 BUCKET FOR VAULT BACKEND
-# ---------------------------------------------------------------------------------------------------------------------
-resource "aws_s3_bucket" "tx_executor_vault" {
-  bucket_prefix = "transaction-executor-"
-}
-
-# ---------------------------------------------------------------------------------------------------------------------
 # LOAD BALANCER FOR VAULT
 # ---------------------------------------------------------------------------------------------------------------------
 resource "aws_lb" "tx_executor_vault" {
   internal = true
 
   subnets         = ["${aws_subnet.vault.*.id}"]
-  security_groups = ["${module.vault_cluster.security_group_id}"]
+  security_groups = ["${aws_security_group.vault_cluster.id}"]
 }
 
 resource "aws_lb_target_group" "tx_executor_vault" {
@@ -82,33 +75,6 @@ data "aws_ami" "vault_consul" {
 }
 
 # ---------------------------------------------------------------------------------------------------------------------
-# DEPLOY THE VAULT SERVER CLUSTER
-# ---------------------------------------------------------------------------------------------------------------------
-module "vault_cluster" {
-  source = "github.com/hashicorp/terraform-aws-vault.git//modules/vault-cluster?ref=v0.0.8"
-
-  cluster_name  = "transaction-executor-vault"
-  cluster_size  = "${var.vault_cluster_size}"
-  instance_type = "${var.vault_instance_type}"
-
-  ami_id    = "${var.vault_consul_ami == "" ? data.aws_ami.vault_consul.id : var.vault_consul_ami}"
-  user_data = "${data.template_file.user_data_vault_cluster.rendered}"
-
-  s3_bucket_name          = "${aws_s3_bucket.tx_executor_vault.id}"
-  force_destroy_s3_bucket = "${var.force_destroy_s3_bucket}"
-
-  vpc_id     = "${var.aws_vpc}"
-  subnet_ids = "${aws_subnet.vault.*.id}"
-
-  target_group_arns = ["${aws_lb_target_group.tx_executor_vault.arn}"]
-
-  allowed_ssh_cidr_blocks            = ["0.0.0.0/0"]
-  allowed_inbound_cidr_blocks        = ["0.0.0.0/0"]
-  allowed_inbound_security_group_ids = []
-  ssh_key_name                       = "${aws_key_pair.auth.id}"
-}
-
-# ---------------------------------------------------------------------------------------------------------------------
 # ALLOW VAULT CLUSTER TO USE AWS AUTH
 # ---------------------------------------------------------------------------------------------------------------------
 resource "aws_iam_policy" "allow_aws_auth" {
@@ -133,7 +99,7 @@ EOF
 }
 
 resource "aws_iam_role_policy_attachment" "allow_aws_auth" {
-  role       = "${module.vault_cluster.iam_role_id}"
+  role       = "${aws_iam_role.vault_cluster.id}"
   policy_arn = "${aws_iam_policy.allow_aws_auth.arn}"
 }
 
@@ -145,7 +111,7 @@ resource "aws_iam_role_policy_attachment" "allow_aws_auth" {
 module "consul_iam_policies_servers" {
   source = "github.com/hashicorp/terraform-aws-consul.git//modules/consul-iam-policies?ref=v0.1.0"
 
-  iam_role_id = "${module.vault_cluster.iam_role_id}"
+  iam_role_id = "${aws_iam_role.vault_cluster.id}"
 }
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -217,6 +183,6 @@ data "template_file" "user_data_consul" {
 data "aws_instances" "vault_servers" {
   filter {
     name   = "tag:aws:autoscaling:groupName"
-    values = ["${module.vault_cluster.asg_name}"]
+    values = ["${aws_autoscaling_group.vault_cluster.name}"]
   }
 }

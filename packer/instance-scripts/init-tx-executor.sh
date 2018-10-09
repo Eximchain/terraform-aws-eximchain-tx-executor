@@ -16,7 +16,7 @@ function generate_tx_executor_supervisor_config {
   VAULT_URL=$(cat /opt/transaction-executor/vault-url.txt)
   QUORUM_URL=$(cat /opt/transaction-executor/quorum-url.txt)
   echo "[program:tx-executor]
-command=sh -c '/opt/transaction-executor/go/bin/eximchain-transaction-executor -vault-address=$VAULT_URL -quorum-address=$QUORUM_URL'
+command=sh -c '/opt/transaction-executor/go/bin/eximchain-transaction-executor server -vault-address=$VAULT_URL -quorum-address=$QUORUM_URL'
 stdout_logfile=/opt/transaction-executor/log/tx-executor-stdout.log
 stderr_logfile=/opt/transaction-executor/log/tx-executor-error.log
 numprocs=1

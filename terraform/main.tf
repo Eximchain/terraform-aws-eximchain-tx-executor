@@ -50,6 +50,9 @@ module "transaction_executor" {
   cert_owner                = "${var.cert_owner}"
   force_destroy_s3_buckets  = "${var.force_destroy_s3_buckets}"
   tx_executor_instance_type = "${var.tx_executor_instance_type}"
+  ccloud_broker             = "${var.ccloud_broker}"
+  ccloud_api_key            = "${var.ccloud_api_key}"
+  ccloud_api_secret         = "${var.ccloud_api_secret}"
 
   # Variables sourced from the vault module
   vault_dns                = "${module.tx_executor_vault.vault_dns}"

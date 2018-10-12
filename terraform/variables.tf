@@ -53,6 +53,18 @@ variable "force_destroy_s3_buckets" {
   default     = false
 }
 
+variable "ccloud_broker" {
+  description = "The broker for the confluence cloud cluster to use for ethconnect."
+}
+
+variable "ccloud_api_key" {
+  description = "The API key for the confluence cloud cluster to use for ethconnect."
+}
+
+variable "ccloud_api_secret" {
+  description = "The API secret for the confluence cloud cluster to use for ethconnect."
+}
+
 variable "tx_executor_ami" {
   description = "AMI ID to use for transaction executor servers. Defaults to getting the most recently built version from Eximchain"
   default     = ""

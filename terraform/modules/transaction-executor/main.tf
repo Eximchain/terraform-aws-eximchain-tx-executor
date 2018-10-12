@@ -130,6 +130,10 @@ data "template_file" "user_data_tx_executor" {
     consul_cluster_tag_value = "${var.consul_cluster_tag_value}"
 
     vault_cert_bucket = "${var.vault_cert_bucket_name}"
+
+    ccloud_broker     = "${var.ccloud_broker}"
+    ccloud_api_key    = "${var.ccloud_api_key}"
+    ccloud_api_secret = "${var.ccloud_api_secret}"
   }
 }
 

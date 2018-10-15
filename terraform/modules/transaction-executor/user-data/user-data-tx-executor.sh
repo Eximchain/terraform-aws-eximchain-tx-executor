@@ -15,15 +15,20 @@ source $BASH_PROFILE_FILE
 
 sleep 60
 
+function write_ccloud_data {
+  echo "${ccloud_broker}" | sudo tee /opt/transaction-executor/ccloud-broker-url.txt > /dev/null 2>&1
+  echo "${ccloud_api_key}" | sudo tee /opt/transaction-executor/ccloud-api-key.txt > /dev/null 2>&1
+  echo "${ccloud_api_secret}" | sudo tee /opt/transaction-executor/ccloud-api-secret.txt > /dev/null 2>&1
+}
+
 function initialize_ccloud {
-  local readonly BROKER="${ccloud_broker}"
-  local readonly API_KEY="${ccloud_api_key}"
-  local readonly API_SECRET="${ccloud_api_secret}"
+  local readonly BROKER=$(cat /opt/transaction-executor/ccloud-broker-url.txt)
+  local readonly API_KEY=$(cat /opt/transaction-executor/ccloud-api-key.txt)
+  local readonly API_SECRET=$(cat /opt/transaction-executor/ccloud-api-secret.txt)
 
   if [ "$BROKER" != "" ] && [ "$API_KEY" != "" ] && [ "$API_SECRET" != "" ]
   then
     printf "$BROKER\n$API_KEY\n$API_SECRET\n" | sudo -u ubuntu ccloud init
-    echo "$BROKER" | sudo tee /opt/transaction-executor/ccloud-broker-url.txt
   else
     echo "No Confluence Cloud configuration data found, skipping ccloud config."
   fi

@@ -16,15 +16,15 @@ source $BASH_PROFILE_FILE
 sleep 60
 
 function write_ccloud_data {
-  echo "${ccloud_broker}" | sudo tee /opt/transaction-executor/ccloud-broker-url.txt > /dev/null 2>&1
-  echo "${ccloud_api_key}" | sudo tee /opt/transaction-executor/ccloud-api-key.txt > /dev/null 2>&1
-  echo "${ccloud_api_secret}" | sudo tee /opt/transaction-executor/ccloud-api-secret.txt > /dev/null 2>&1
+  echo "${ccloud_broker}" | sudo tee /opt/transaction-executor/info/ccloud-broker-url.txt > /dev/null 2>&1
+  echo "${ccloud_api_key}" | sudo tee /opt/transaction-executor/info/ccloud-api-key.txt > /dev/null 2>&1
+  echo "${ccloud_api_secret}" | sudo tee /opt/transaction-executor/info/ccloud-api-secret.txt > /dev/null 2>&1
 }
 
 function initialize_ccloud {
-  local readonly BROKER=$(cat /opt/transaction-executor/ccloud-broker-url.txt)
-  local readonly API_KEY=$(cat /opt/transaction-executor/ccloud-api-key.txt)
-  local readonly API_SECRET=$(cat /opt/transaction-executor/ccloud-api-secret.txt)
+  local readonly BROKER=$(cat /opt/transaction-executor/info/ccloud-broker-url.txt)
+  local readonly API_KEY=$(cat /opt/transaction-executor/info/ccloud-api-key.txt)
+  local readonly API_SECRET=$(cat /opt/transaction-executor/info/ccloud-api-secret.txt)
 
   if [ "$BROKER" != "" ] && [ "$API_KEY" != "" ] && [ "$API_SECRET" != "" ]
   then
@@ -61,6 +61,7 @@ function download_vault_certs {
 exec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1
 
 download_vault_certs
+write_ccloud_data
 initialize_ccloud
 
 # These variables are passed in via Terraform template interpolation

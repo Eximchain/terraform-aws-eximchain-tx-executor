@@ -99,8 +99,8 @@ resource "aws_instance" "tx_executor" {
   provisioner "remote-exec" {
     inline = [
       "sudo apt-get -y update",
-      "echo 'https://${var.vault_dns}:${var.vault_port}' > /opt/transaction-executor/vault-url.txt",
-      "echo 'http://${var.quorum_dns}:${var.quorum_port}' > /opt/transaction-executor/quorum-url.txt"
+      "echo 'https://${var.vault_dns}:${var.vault_port}' > /opt/transaction-executor/info/vault-url.txt",
+      "echo 'http://${var.quorum_dns}:${var.quorum_port}' > /opt/transaction-executor/info/quorum-url.txt"
     ]
   }
 }

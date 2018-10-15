@@ -8,7 +8,6 @@ set -eu
 readonly BASH_PROFILE_FILE="/home/ubuntu/.bash_profile"
 readonly VAULT_TLS_CERT_DIR="/opt/vault/tls"
 readonly CA_TLS_CERT_FILE="$VAULT_TLS_CERT_DIR/ca.crt.pem"
-readonly CCLOUD_INFO_DIR="/opt/transaction-executor/info/"
 
 # This is necessary to retrieve the address for vault
 echo "export VAULT_ADDR=https://${vault_dns}:${vault_port}" >> $BASH_PROFILE_FILE
@@ -24,6 +23,7 @@ function initialize_ccloud {
   if [ "$BROKER" != "" ] && [ "$API_KEY" != "" ] && [ "$API_SECRET" != "" ]
   then
     printf "$BROKER\n$API_KEY\n$API_SECRET\n" | sudo -u ubuntu ccloud init
+    echo "$BROKER" | sudo tee /opt/transaction-executor/ccloud-broker-url.txt
   else
     echo "No Confluence Cloud configuration data found, skipping ccloud config."
   fi

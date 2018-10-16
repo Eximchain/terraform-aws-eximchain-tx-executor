@@ -9,6 +9,9 @@ readonly BASH_PROFILE_FILE="/home/ubuntu/.bash_profile"
 readonly VAULT_TLS_CERT_DIR="/opt/vault/tls"
 readonly CA_TLS_CERT_FILE="$VAULT_TLS_CERT_DIR/ca.crt.pem"
 
+readonly ETHCONNECT_TOPIC_IN="ethconnect-eximchain-in"
+readonly ETHCONNECT_TOPIC_OUT="ethconnect-eximchain-out"
+
 # This is necessary to retrieve the address for vault
 echo "export VAULT_ADDR=https://${vault_dns}:${vault_port}" >> $BASH_PROFILE_FILE
 source $BASH_PROFILE_FILE
@@ -19,6 +22,8 @@ function write_ccloud_data {
   echo "${ccloud_broker}" | sudo tee /opt/transaction-executor/info/ccloud-broker-url.txt > /dev/null 2>&1
   echo "${ccloud_api_key}" | sudo tee /opt/transaction-executor/info/ccloud-api-key.txt > /dev/null 2>&1
   echo "${ccloud_api_secret}" | sudo tee /opt/transaction-executor/info/ccloud-api-secret.txt > /dev/null 2>&1
+  echo "$ETHCONNECT_TOPIC_IN" | sudo tee /opt/transaction-executor/info/ethconnect-topic-in.txt > /dev/null 2>&1
+  echo "$ETHCONNECT_TOPIC_OUT" | sudo tee /opt/transaction-executor/info/ethconnect-topic-out.txt > /dev/null 2>&1
 }
 
 function initialize_ccloud {

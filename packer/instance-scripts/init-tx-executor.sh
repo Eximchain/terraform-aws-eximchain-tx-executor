@@ -27,6 +27,27 @@ user=ubuntu
 environment=GOPATH=/opt/transaction-executor/go" | sudo tee /etc/supervisor/conf.d/tx-executor-supervisor.conf
 }
 
+function ensure_ethconnect_topics_exist {
+  local readonly TOPIC_IN=$(cat /opt/transaction-executor/info/ethconnect-topic-in.txt)
+  local readonly TOPIC_OUT=$(cat /opt/transaction-executor/info/ethconnect-topic-out.txt)
+
+  local readonly TOPIC_LIST=$(wait_for_successful_command 'ccloud topic list')
+  local readonly TOPIC_IN_EXISTS=$(echo "$TOPIC_LIST" | grep $TOPIC_IN | wc -l)
+  local readonly TOPIC_OUT_EXISTS=$(echo "$TOPIC_LIST" | grep $TOPIC_OUT | wc -l)
+
+  if [ "$TOPIC_IN_EXISTS" == "0" ]
+  then
+    ccloud topic create $TOPIC_IN
+  fi
+
+  if [ "$TOPIC_OUT_EXISTS" == "0" ]
+  then
+    ccloud topic create $TOPIC_OUT
+  fi
+}
+
+ensure_ethconnect_topics_exist
+
 # Generate singleton geth keypair for testing
 GETH_PW=$(uuidgen -r)
 ADDRESS=0x$(echo -ne "$GETH_PW\n$GETH_PW\n" | geth account new | grep Address | awk '{ gsub("{|}", "") ; print $2 }')

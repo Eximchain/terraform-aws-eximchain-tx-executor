@@ -58,7 +58,8 @@
       "provisioning-scripts/ccloud.sh",
       "provisioning-scripts/porosity.sh",
       "provisioning-scripts/quorum.sh",
-      "provisioning-scripts/transaction-executor.sh"
+      "provisioning-scripts/transaction-executor.sh",
+      "provisioning-scripts/ethconnect.sh"
     ]
   },{
     "type": "file",

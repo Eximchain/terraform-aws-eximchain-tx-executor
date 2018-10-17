@@ -18,12 +18,17 @@ source $BASH_PROFILE_FILE
 
 sleep 60
 
-function write_ccloud_data {
+function write_data {
   echo "${ccloud_broker}" | sudo tee /opt/transaction-executor/info/ccloud-broker-url.txt > /dev/null 2>&1
   echo "${ccloud_api_key}" | sudo tee /opt/transaction-executor/info/ccloud-api-key.txt > /dev/null 2>&1
   echo "${ccloud_api_secret}" | sudo tee /opt/transaction-executor/info/ccloud-api-secret.txt > /dev/null 2>&1
   echo "$ETHCONNECT_TOPIC_IN" | sudo tee /opt/transaction-executor/info/ethconnect-topic-in.txt > /dev/null 2>&1
   echo "$ETHCONNECT_TOPIC_OUT" | sudo tee /opt/transaction-executor/info/ethconnect-topic-out.txt > /dev/null 2>&1
+  echo "${mongo_connection_url}" | sudo tee /opt/transaction-executor/info/mongo-connection-url.txt > /dev/null 2>&1
+  echo "${mongo_database_name}" | sudo tee /opt/transaction-executor/info/mongo-database-name.txt > /dev/null 2>&1
+  echo "${mongo_collection_name}" | sudo tee /opt/transaction-executor/info/mongo-collection-name.txt > /dev/null 2>&1
+  echo "${mongo_max_receipts}" | sudo tee /opt/transaction-executor/info/mongo-max-receipts.txt > /dev/null 2>&1
+  echo "${mongo_query_limit}" | sudo tee /opt/transaction-executor/info/mongo-query-limit.txt > /dev/null 2>&1
 }
 
 function initialize_ccloud {
@@ -66,7 +71,7 @@ function download_vault_certs {
 exec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1
 
 download_vault_certs
-write_ccloud_data
+write_data
 initialize_ccloud
 
 # These variables are passed in via Terraform template interpolation

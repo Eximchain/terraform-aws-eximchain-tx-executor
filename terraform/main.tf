@@ -53,6 +53,11 @@ module "transaction_executor" {
   ccloud_broker             = "${var.ccloud_broker}"
   ccloud_api_key            = "${var.ccloud_api_key}"
   ccloud_api_secret         = "${var.ccloud_api_secret}"
+  mongo_connection_url      = "${var.mongo_connection_url}"
+  mongo_database_name       = "${var.mongo_database_name}"
+  mongo_collection_name     = "${var.mongo_collection_name}"
+  mongo_max_receipts        = "${var.mongo_max_receipts}"
+  mongo_query_limit         = "${var.mongo_query_limit}"
 
   # Variables sourced from the vault module
   vault_dns                = "${module.tx_executor_vault.vault_dns}"

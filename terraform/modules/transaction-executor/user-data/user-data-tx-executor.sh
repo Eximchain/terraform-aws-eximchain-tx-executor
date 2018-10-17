@@ -19,6 +19,10 @@ source $BASH_PROFILE_FILE
 sleep 60
 
 function write_data {
+  echo "${ethconnect_webhook_port}" | sudo tee /opt/transaction-executor/info/ethconnect-webhook-port.txt > /dev/null 2>&1
+  echo "${ethconnect_always_manage_nonce}" | sudo tee /opt/transaction-executor/info/ethconnect-always-manage-nonce.txt > /dev/null 2>&1
+  echo "${ethconnect_max_in_flight}" | sudo tee /opt/transaction-executor/info/ethconnect-max-in-flight.txt > /dev/null 2>&1
+  echo "${ethconnect_max_tx_wait_time}" | sudo tee /opt/transaction-executor/info/ethconnect-max-tx-wait-time.txt > /dev/null 2>&1
   echo "${ccloud_broker}" | sudo tee /opt/transaction-executor/info/ccloud-broker-url.txt > /dev/null 2>&1
   echo "${ccloud_api_key}" | sudo tee /opt/transaction-executor/info/ccloud-api-key.txt > /dev/null 2>&1
   echo "${ccloud_api_secret}" | sudo tee /opt/transaction-executor/info/ccloud-api-secret.txt > /dev/null 2>&1

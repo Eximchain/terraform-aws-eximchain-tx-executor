@@ -74,6 +74,26 @@ variable "force_destroy_s3_buckets" {
   default     = false
 }
 
+variable "ethconnect_webhook_port" {
+  description = "The port to run the ethconnect webhook API on."
+  default     = "9090"
+}
+
+variable "ethconnect_max_in_flight" {
+  description = "The maximum number of requests in flight between Kafka and Eximchain at any time."
+  default     = "25"
+}
+
+variable "ethconnect_max_tx_wait_time" {
+  description = "The maximum number of seconds to wait for a successful transaction before timeout and retry."
+  default     = "60"
+}
+
+variable "ethconnect_always_manage_nonce" {
+  description = "Whether ethconnect should always manage the nonce on its own. Should be a string reading 'true' or 'false'."
+  default     = "false"
+}
+
 variable "ccloud_broker" {
   description = "The broker for the confluence cloud cluster to use for ethconnect."
   default     = ""

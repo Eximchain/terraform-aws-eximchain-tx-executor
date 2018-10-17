@@ -131,6 +131,11 @@ data "template_file" "user_data_tx_executor" {
 
     vault_cert_bucket = "${var.vault_cert_bucket_name}"
 
+    ethconnect_webhook_port        = "${var.ethconnect_webhook_port}"
+    ethconnect_always_manage_nonce = "${var.ethconnect_always_manage_nonce}"
+    ethconnect_max_in_flight       = "${var.ethconnect_max_in_flight}"
+    ethconnect_max_tx_wait_time    = "${var.ethconnect_max_tx_wait_time}"
+
     ccloud_broker     = "${var.ccloud_broker}"
     ccloud_api_key    = "${var.ccloud_api_key}"
     ccloud_api_secret = "${var.ccloud_api_secret}"

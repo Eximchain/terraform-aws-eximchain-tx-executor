@@ -55,14 +55,17 @@ variable "force_destroy_s3_buckets" {
 
 variable "ccloud_broker" {
   description = "The broker for the confluence cloud cluster to use for ethconnect."
+  default     = ""
 }
 
 variable "ccloud_api_key" {
   description = "The API key for the confluence cloud cluster to use for ethconnect."
+  default     = ""
 }
 
 variable "ccloud_api_secret" {
   description = "The API secret for the confluence cloud cluster to use for ethconnect."
+  default     = ""
 }
 
 variable "tx_executor_ami" {

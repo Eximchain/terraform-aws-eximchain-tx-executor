@@ -13,8 +13,8 @@ function wait_for_successful_command {
 }
 
 function generate_tx_executor_supervisor_config {
-  VAULT_URL=$(cat /opt/transaction-executor/vault-url.txt)
-  QUORUM_URL=$(cat /opt/transaction-executor/quorum-url.txt)
+  VAULT_URL=$(cat /opt/transaction-executor/info/vault-url.txt)
+  QUORUM_URL=$(cat /opt/transaction-executor/info/quorum-url.txt)
   echo "[program:tx-executor]
 command=sh -c '/opt/transaction-executor/go/bin/eximchain-transaction-executor server -vault-address=$VAULT_URL -quorum-address=$QUORUM_URL'
 stdout_logfile=/opt/transaction-executor/log/tx-executor-stdout.log

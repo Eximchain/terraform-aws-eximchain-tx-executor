@@ -168,6 +168,28 @@ resource "aws_security_group_rule" "tx_executor_ssh" {
   cidr_blocks = ["0.0.0.0/0"]
 }
 
+resource "aws_security_group_rule" "tx_executor_rpc_access" {
+  security_group_id = "${aws_security_group.tx_executor.id}"
+  type              = "ingress"
+
+  from_port = 8080
+  to_port   = 8080
+  protocol  = "tcp"
+
+  cidr_blocks = ["0.0.0.0/0"]
+}
+
+resource "aws_security_group_rule" "tx_executor_ethconnect_access" {
+  security_group_id = "${aws_security_group.tx_executor.id}"
+  type              = "ingress"
+
+  from_port = "${var.ethconnect_webhook_port}"
+  to_port   = "${var.ethconnect_webhook_port}"
+  protocol  = "tcp"
+
+  cidr_blocks = ["0.0.0.0/0"]
+}
+
 resource "aws_security_group_rule" "tx_executor_egress" {
   security_group_id = "${aws_security_group.tx_executor.id}"
   type              = "egress"

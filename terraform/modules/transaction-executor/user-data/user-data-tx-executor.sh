@@ -48,6 +48,89 @@ function initialize_ccloud {
   fi
 }
 
+function write_ethconnect_config {
+  local readonly TOPIC_IN=$(cat /opt/transaction-executor/info/ethconnect-topic-in.txt)
+  local readonly TOPIC_OUT=$(cat /opt/transaction-executor/info/ethconnect-topic-out.txt)
+
+  local readonly BROKER=$(cat /opt/transaction-executor/info/ccloud-broker-url.txt)
+  local readonly SASL_PASSWORD=$(cat /opt/transaction-executor/info/ccloud-api-secret.txt)
+  local readonly SASL_USERNAME=$(cat /opt/transaction-executor/info/ccloud-api-key.txt)
+  local readonly NODE_URL=$(cat /opt/transaction-executor/info/quorum-url.txt)
+
+  local readonly WEBHOOK_PORT=$(cat /opt/transaction-executor/info/ethconnect-webhook-port.txt)
+  local readonly MAX_IN_FLIGHT=$(cat /opt/transaction-executor/info/ethconnect-max-in-flight.txt)
+  local readonly MAX_TX_WAIT_TIME=$(cat /opt/transaction-executor/info/ethconnect-max-tx-wait-time.txt)
+  local readonly ALWAYS_MANAGE_NONCE=$(cat /opt/transaction-executor/info/ethconnect-always-manage-nonce.txt)
+
+  local readonly MONGO_URL=$(cat /opt/transaction-executor/info/mongo-connection-url.txt)
+  local readonly MONGO_DATABASE=$(cat /opt/transaction-executor/info/mongo-database-name.txt)
+  local readonly MONGO_COLLECTION=$(cat /opt/transaction-executor/info/mongo-collection-name.txt)
+  local readonly MONGO_MAX_DOCS=$(cat /opt/transaction-executor/info/mongo-max-receipts.txt)
+  local readonly MONGO_QUERY_LIMIT=$(cat /opt/transaction-executor/info/mongo-query-limit.txt)
+
+  local readonly HOSTNAME=$(curl http://169.254.169.254/latest/meta-data/public-hostname)
+
+  local readonly CLIENT_ID=$(uuidgen -r)
+  local readonly CONSUMER_GROUP=$(uuidgen -r)
+
+  echo "kafka:
+  kafka-to-eximchain:
+    kafka:
+      brokers:
+      - $BROKER
+      clientID: $CLIENT_ID
+      consumerGroup: $CONSUMER_GROUP
+      sasl:
+        Password: $SASL_PASSWORD
+        Username: $SASL_USERNAME
+      tls:
+        caCertsFile: \"\"
+        clientCertsFile: \"\"
+        clientKeyFile: \"\"
+        enabled: true
+        insecureSkipVerify: false
+      topicIn: $TOPIC_IN
+      topicOut: $TOPIC_OUT
+    maxInFlight: $MAX_IN_FLIGHT
+    maxTXWaitTime: $MAX_TX_WAIT_TIME
+    alwaysManageNonce: $ALWAYS_MANAGE_NONCE
+    rpc:
+      url: $NODE_URL
+webhooks:
+  webhooks-to-kafka:
+    http:
+      localAddr: $HOSTNAME
+      port: $WEBHOOK_PORT
+      tls:
+        caCertsFile: \"\"
+        clientCertsFile: \"\"
+        clientKeyFile: \"\"
+        enabled: true
+        insecureSkipVerify: false
+    kafka:
+      brokers:
+      - $BROKER
+      clientID: $CLIENT_ID
+      consumerGroup: $CONSUMER_GROUP
+      topicIn: $TOPIC_IN
+      topicOut: $TOPIC_OUT
+      sasl:
+        Password: $SASL_PASSWORD
+        Username: $SASL_USERNAME
+      tls:
+        caCertsFile: \"\"
+        clientCertsFile: \"\"
+        clientKeyFile: \"\"
+        enabled: true
+        insecureSkipVerify: false
+    mongodb:
+      collection: $MONGO_COLLECTION
+      database: $MONGO_DATABASE
+      maxDocs: $MONGO_MAX_DOCS
+      queryLimit: $MONGO_QUERY_LIMIT
+      url: $MONGO_URL" | sudo tee /opt/transaction-executor/ethconnect-config.yml
+}
+
 function download_vault_certs {
   # Download vault certs from s3
   aws configure set s3.signature_version s3v4
@@ -77,6 +160,7 @@ exec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1
 download_vault_certs
 write_data
 initialize_ccloud
+write_ethconnect_config
 
 # These variables are passed in via Terraform template interpolation
 /opt/consul/bin/run-consul --client --cluster-tag-key "${consul_cluster_tag_key}" --cluster-tag-value "${consul_cluster_tag_value}"

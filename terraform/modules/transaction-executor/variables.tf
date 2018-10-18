@@ -76,7 +76,7 @@ variable "force_destroy_s3_buckets" {
 
 variable "ethconnect_webhook_port" {
   description = "The port to run the ethconnect webhook API on."
-  default     = "9090"
+  default     = "8088"
 }
 
 variable "ethconnect_max_in_flight" {

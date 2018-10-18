@@ -135,6 +135,16 @@ $ vault unseal $UNSEAL_KEY
 
 TODO
 
+## Example Ethconnect Test
+
+```sh
+NODE=$(cat /opt/transaction-executor/info/quorum-url.txt)
+PORT="8088" # Change this if you changed the port in terraform
+vim payload.yml # Make this a YAML payload for ethconnect
+
+curl -X POST --data-binary @payload.yml -H "Content-type: application/x-yaml" http://$NODE:$PORT/hook
+```
+
 ## Destroy the Network
 
 If this is a test and you are finished with your infrastructure, you will likely want to destroy your network to avoid incurring extra AWS costs:

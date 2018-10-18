@@ -168,7 +168,9 @@ resource "aws_security_group_rule" "tx_executor_ssh" {
   cidr_blocks = ["0.0.0.0/0"]
 }
 
-resource "aws_security_group_rule" "tx_executor_rpc_access" {
+resource "aws_security_group_rule" "tx_executor_rpc_cidr_access" {
+  count = "${length(var.rpc_api_cidrs) == 0 ? 0 : 1}"
+
   security_group_id = "${aws_security_group.tx_executor.id}"
   type              = "ingress"
 
@@ -176,10 +178,25 @@ resource "aws_security_group_rule" "tx_executor_rpc_access" {
   to_port   = 8080
   protocol  = "tcp"
 
-  cidr_blocks = ["0.0.0.0/0"]
+  cidr_blocks = "${var.rpc_api_cidrs}"
 }
 
-resource "aws_security_group_rule" "tx_executor_ethconnect_access" {
+resource "aws_security_group_rule" "tx_executor_rpc_security_group_access" {
+  count = "${length(var.rpc_api_security_groups)}"
+
+  security_group_id = "${aws_security_group.tx_executor.id}"
+  type              = "ingress"
+
+  from_port = 8080
+  to_port   = 8080
+  protocol  = "tcp"
+
+  source_security_group_id = "${element(var.rpc_api_security_groups, count.index)}"
+}
+
+resource "aws_security_group_rule" "tx_executor_ethconnect_cidr_access" {
+  count = "${length(var.ethconnect_api_cidrs) == 0 ? 0 : 1}"
+
   security_group_id = "${aws_security_group.tx_executor.id}"
   type              = "ingress"
 
@@ -187,7 +204,20 @@ resource "aws_security_group_rule" "tx_executor_ethconnect_access" {
   to_port   = "${var.ethconnect_webhook_port}"
   protocol  = "tcp"
 
-  cidr_blocks = ["0.0.0.0/0"]
+  cidr_blocks = "${var.ethconnect_api_cidrs}"
+}
+
+resource "aws_security_group_rule" "tx_executor_ethconnect_security_group_access" {
+  count = "${length(var.ethconnect_api_security_groups)}"
+
+  security_group_id = "${aws_security_group.tx_executor.id}"
+  type              = "ingress"
+
+  from_port = "${var.ethconnect_webhook_port}"
+  to_port   = "${var.ethconnect_webhook_port}"
+  protocol  = "tcp"
+
+  source_security_group_id = "${element(var.ethconnect_api_security_groups, count.index)}"
 }
 
 resource "aws_security_group_rule" "tx_executor_egress" {

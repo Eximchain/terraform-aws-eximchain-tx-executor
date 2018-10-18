@@ -69,6 +69,26 @@ variable "private_key" {
   default     = ""
 }
 
+variable "ethconnect_api_cidrs" {
+  description = "List of CIDRs to grant access to the ethconnect API."
+  default     = []
+}
+
+variable "ethconnect_api_security_groups" {
+  description = "List of security groups to grant access to the ethconnect API."
+  default     = []
+}
+
+variable "rpc_api_cidrs" {
+  description = "List of CIDRs to grant access to the rpc API."
+  default     = []
+}
+
+variable "rpc_api_security_groups" {
+  description = "List of security groups to grant access to the rpc API."
+  default     = []
+}
+
 variable "force_destroy_s3_buckets" {
   description = "Whether or not to force destroy s3 buckets. Set to true for an easily destroyed test environment. DO NOT set to true for a production environment."
   default     = false

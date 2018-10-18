@@ -99,8 +99,8 @@ resource "aws_instance" "tx_executor" {
   provisioner "remote-exec" {
     inline = [
       "sudo apt-get -y update",
-      "echo 'https://${var.vault_dns}:${var.vault_port}' > /opt/transaction-executor/vault-url.txt",
-      "echo 'http://${var.quorum_dns}:${var.quorum_port}' > /opt/transaction-executor/quorum-url.txt"
+      "echo 'https://${var.vault_dns}:${var.vault_port}' > /opt/transaction-executor/info/vault-url.txt",
+      "echo 'http://${var.quorum_dns}:${var.quorum_port}' > /opt/transaction-executor/info/quorum-url.txt"
     ]
   }
 }
@@ -130,6 +130,21 @@ data "template_file" "user_data_tx_executor" {
     consul_cluster_tag_value = "${var.consul_cluster_tag_value}"
 
     vault_cert_bucket = "${var.vault_cert_bucket_name}"
+
+    ethconnect_webhook_port        = "${var.ethconnect_webhook_port}"
+    ethconnect_always_manage_nonce = "${var.ethconnect_always_manage_nonce}"
+    ethconnect_max_in_flight       = "${var.ethconnect_max_in_flight}"
+    ethconnect_max_tx_wait_time    = "${var.ethconnect_max_tx_wait_time}"
+
+    ccloud_broker     = "${var.ccloud_broker}"
+    ccloud_api_key    = "${var.ccloud_api_key}"
+    ccloud_api_secret = "${var.ccloud_api_secret}"
+
+    mongo_connection_url      = "${var.mongo_connection_url}"
+    mongo_database_name       = "${var.mongo_database_name}"
+    mongo_collection_name     = "${var.mongo_collection_name}"
+    mongo_max_receipts        = "${var.mongo_max_receipts}"
+    mongo_query_limit         = "${var.mongo_query_limit}"
   }
 }
 

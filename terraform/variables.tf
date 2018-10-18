@@ -53,6 +53,66 @@ variable "force_destroy_s3_buckets" {
   default     = false
 }
 
+variable "ethconnect_webhook_port" {
+  description = "The port to run the ethconnect webhook API on."
+  default     = "8088"
+}
+
+variable "ethconnect_max_in_flight" {
+  description = "The maximum number of requests in flight between Kafka and Eximchain at any time."
+  default     = "25"
+}
+
+variable "ethconnect_max_tx_wait_time" {
+  description = "The maximum number of seconds to wait for a successful transaction before timeout and retry."
+  default     = "60"
+}
+
+variable "ethconnect_always_manage_nonce" {
+  description = "Whether ethconnect should always manage the nonce on its own. Should be a string reading 'true' or 'false'."
+  default     = "false"
+}
+
+variable "ccloud_broker" {
+  description = "The broker for the confluence cloud cluster to use for ethconnect."
+  default     = ""
+}
+
+variable "ccloud_api_key" {
+  description = "The API key for the confluence cloud cluster to use for ethconnect."
+  default     = ""
+}
+
+variable "ccloud_api_secret" {
+  description = "The API secret for the confluence cloud cluster to use for ethconnect."
+  default     = ""
+}
+
+variable "mongo_connection_url" {
+  description = "Connection string for use with the mgo driver to connect to the MongoDB store to use for receipts."
+  default     = ""
+}
+
+variable "mongo_database_name" {
+  description = "Name of the MongoDB database to use for receipts."
+  default     = ""
+}
+
+variable "mongo_collection_name" {
+  description = "Name of the MongoDB collection to use for receipts. Does not need to exist in the database already."
+  default     = ""
+}
+
+variable "mongo_max_receipts" {
+  description = "Number of receipts to retain in the MongoDB store."
+  default     = ""
+}
+
+variable "mongo_query_limit" {
+  description = "Max number of receipts to retrieve at once."
+  default     = ""
+}
+
 variable "tx_executor_ami" {
   description = "AMI ID to use for transaction executor servers. Defaults to getting the most recently built version from Eximchain"
   default     = ""

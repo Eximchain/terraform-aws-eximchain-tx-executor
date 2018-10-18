@@ -16,8 +16,9 @@ mkdir $GO_BIN
 # Install dep
 curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
 
+# Clone repository using SSH
 cd $GO_SRC
-git clone https://github.com/Eximchain/eximchain-transaction-executor.git
+git clone git@github.com:Eximchain/eximchain-transaction-executor.git
 cd eximchain-transaction-executor
 
 # Install Dependencies

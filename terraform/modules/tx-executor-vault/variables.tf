@@ -75,3 +75,8 @@ variable "cert_org_name" {
   description = "The organization to associate with the vault certificates."
   default     = "Example Co."
 }
+
+variable "base_subnet_cidr" {
+  description = "The cidr range to use for subnets."
+  default     = "10.0.0.0/16"
+}

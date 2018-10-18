@@ -182,3 +182,8 @@ variable "cert_org_name" {
   description = "The organization to associate with the vault certificates."
   default     = "Example Co."
 }
+
+variable "vpc_cidr" {
+  description = "The cidr range to use for the VPC."
+  default     = "10.0.0.0/16"
+}

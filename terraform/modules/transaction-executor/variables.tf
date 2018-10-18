@@ -163,3 +163,8 @@ variable "tx_executor_instance_type" {
   description = "The EC2 instance type to use for transaction executor nodes"
   default     = "t2.medium"
 }
+
+variable "base_subnet_cidr" {
+  description = "The cidr range to use for subnets."
+  default     = "10.0.0.0/16"
+}

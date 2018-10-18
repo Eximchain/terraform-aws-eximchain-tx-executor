@@ -12,7 +12,7 @@ provider "local" {
 # NETWORKING
 # ---------------------------------------------------------------------------------------------------------------------
 resource "aws_vpc" "tx_executor" {
-  cidr_block           = "10.0.0.0/16"
+  cidr_block           = "${var.vpc_cidr}"
   enable_dns_hostnames = true
 }
 
@@ -77,6 +77,8 @@ module "transaction_executor" {
 
   aws_vpc = "${aws_vpc.tx_executor.id}"
 
+  base_subnet_cidr = "${cidrsubnet(var.vpc_cidr, 2, 0)}"
+
   tx_executor_ami = "${var.tx_executor_ami}"
 }
 
@@ -97,6 +99,8 @@ module "tx_executor_vault" {
   force_destroy_s3_bucket = "${var.force_destroy_s3_buckets}"
 
   aws_vpc = "${aws_vpc.tx_executor.id}"
+
+  base_subnet_cidr = "${cidrsubnet(var.vpc_cidr, 2, 1)}"
 
   vault_cluster_size   = "${var.vault_cluster_size}"
   vault_instance_type  = "${var.vault_instance_type}"
@@ -119,6 +123,8 @@ module "eximchain_node" {
   eximchain_node_instance_type = "${var.eximchain_node_instance_type}"
 
   aws_vpc = "${aws_vpc.tx_executor.id}"
+
+  base_subnet_cidr = "${cidrsubnet(var.vpc_cidr, 2, 2)}"
 
   # External Vault Parameters
   vault_dns  = "${module.tx_executor_vault.vault_dns}"

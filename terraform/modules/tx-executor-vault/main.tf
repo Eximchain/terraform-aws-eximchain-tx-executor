@@ -30,7 +30,7 @@ resource "aws_subnet" "vault" {
   vpc_id                  = "${var.aws_vpc}"
   count                   = "${length(data.aws_availability_zones.available.names)}"
   availability_zone       = "${element(data.aws_availability_zones.available.names, count.index)}"
-  cidr_block              = "10.0.${count.index + 8}.0/24"
+  cidr_block              = "${cidrsubnet(var.base_subnet_cidr, 3, count.index)}"
   map_public_ip_on_launch = true
 }
 

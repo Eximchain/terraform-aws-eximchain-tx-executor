@@ -50,7 +50,7 @@ $ ssh-add ~/.ssh/quorum
 
 ## Build AMIs to launch the instances with
 
-You may skip this step. If you do, your AMI will be the most recent one built by the official Eximchain AWS Account. We try to keep this as recent as possible but currently no guarantees are made.
+You may skip this step. If you do, your AMI will be the most recent one built by the official Eximchain AWS Account. We try to keep this as recent as possible but currently no guarantees are made. We highly recommend building your own AMI for any production use.
 
 Use packer to build the AMIs needed to launch instances
 
@@ -62,6 +62,8 @@ $ packer build transaction-executor.json
 # Wait for build
 $ cd ..
 ```
+
+You may wish to build an AMI for the eximchain node as well. Instructions can be found in [this repository](https://github.com/Eximchain/terraform-aws-eximchain-node). Note that if you wish to connect to the test network, you will need to build your own AMI.
 
 ## Launch Network with Terraform
 

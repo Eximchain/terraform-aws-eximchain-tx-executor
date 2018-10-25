@@ -28,7 +28,7 @@ vault audit-enable file file_path=\$AUDIT_LOG
 
 # Mount paths
 vault mount -path=keys -default-lease-ttl=30 -description="Keys for the Transaction Executor" kv
-vault mount -path=node -default-lease-ttl=30 -description="Keys for the Eximchain Node" kv
+vault mount -path=nodes -default-lease-ttl=30 -description="Keys for the Eximchain Node" kv
 
 # Create policies
 TX_EXECUTOR_POLICY=/opt/vault/config/policies/tx-executor.hcl

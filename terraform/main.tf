@@ -111,8 +111,12 @@ module "tx_executor_vault" {
 module "eximchain_node" {
   source = "github.com/eximchain/terraform-aws-eximchain-node.git//terraform/modules/eximchain-node"
 
-  aws_region        = "${var.aws_region}"
-  availability_zone = "${var.availability_zone}"
+  aws_region         = "${var.aws_region}"
+  availability_zones = "${var.node_availability_zones}"
+
+  node_count = "${var.node_count}"
+
+  create_load_balancer = true
 
   public_key    = "${var.public_key == "" ? join("", data.local_file.public_key.*.content) : var.public_key}"
   # TODO: Don't make certs if we're using an external vault
@@ -157,4 +161,7 @@ module "allow_rpc" {
 
   node_security_group = "${module.eximchain_node.eximchain_node_security_group_id}"
   rpc_security_group  = "${module.transaction_executor.transaction_executor_security_group}"
+
+  using_lb          = true
+  lb_security_group = "${module.eximchain_node.eximchain_load_balancer_security_group_id}"
 }

@@ -48,6 +48,16 @@ variable "vault_port" {
   default     = 8200
 }
 
+variable "node_availability_zones" {
+  description = "AWS availability zones to distribute the eximchain nodes amongst. Must name at least two. Defaults to distributing nodes across AZs."
+  default     = []
+}
+
+variable "node_count" {
+  description = "The number of eximchain nodes to launch."
+  default     = 1
+}
+
 variable "ethconnect_api_cidrs" {
   description = "List of CIDRs to grant access to the ethconnect API."
   default     = []

@@ -116,7 +116,8 @@ module "eximchain_node" {
 
   node_count = "${var.node_count}"
 
-  create_load_balancer = true
+  create_load_balancer       = true
+  use_internal_load_balancer = true
 
   public_key    = "${var.public_key == "" ? join("", data.local_file.public_key.*.content) : var.public_key}"
   # TODO: Don't make certs if we're using an external vault

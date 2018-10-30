@@ -131,6 +131,10 @@ module "eximchain_node" {
 
   base_subnet_cidr = "${cidrsubnet(var.vpc_cidr, 2, 2)}"
 
+  # Allow RPC from tx executor
+  rpc_security_groups     = ["${module.transaction_executor.transaction_executor_security_group}"]
+  num_rpc_security_groups = 1
+
   # External Vault Parameters
   vault_dns  = "${module.tx_executor_vault.vault_dns}"
   vault_port = "${var.vault_port}"
@@ -154,15 +158,4 @@ module "eximchain_node" {
 resource "aws_iam_role_policy_attachment" "vault_cert_access" {
   role       = "${module.eximchain_node.eximchain_node_iam_role}"
   policy_arn = "${module.tx_executor_vault.vault_cert_access_policy_arn}"
-}
-
-# Allow the transaction executor to make RPC calls to the eximchain node
-module "allow_rpc" {
-  source = "github.com/eximchain/terraform-aws-eximchain-node.git//terraform/modules/allow-rpc-rule"
-
-  node_security_group = "${module.eximchain_node.eximchain_node_security_group_id}"
-  rpc_security_group  = "${module.transaction_executor.transaction_executor_security_group}"
-
-  using_lb          = true
-  lb_security_group = "${module.eximchain_node.eximchain_load_balancer_security_group_id}"
 }

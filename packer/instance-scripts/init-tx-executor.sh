@@ -13,10 +13,11 @@ function wait_for_successful_command {
 }
 
 function generate_tx_executor_supervisor_config {
-  VAULT_URL=$(cat /opt/transaction-executor/info/vault-url.txt)
-  QUORUM_URL=$(cat /opt/transaction-executor/info/quorum-url.txt)
+  local readonly VAULT_URL=$(cat /opt/transaction-executor/info/vault-url.txt)
+  local readonly QUORUM_URL=$(cat /opt/transaction-executor/info/quorum-url.txt)
+  local readonly DISABLE_AUTH=$(cat /opt/transaction-executor/info/disable-authentication.txt)
   echo "[program:tx-executor]
-command=sh -c '/opt/transaction-executor/go/bin/eximchain-transaction-executor server -vault-address=$VAULT_URL -quorum-address=$QUORUM_URL'
+command=sh -c '/opt/transaction-executor/go/bin/eximchain-transaction-executor server -vault-address=$VAULT_URL -quorum-address=$QUORUM_URL -disable-auth=$DISABLE_AUTH'
 stdout_logfile=/opt/transaction-executor/log/tx-executor-stdout.log
 stderr_logfile=/opt/transaction-executor/log/tx-executor-error.log
 numprocs=1

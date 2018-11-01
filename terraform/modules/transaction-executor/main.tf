@@ -131,6 +131,8 @@ data "template_file" "user_data_tx_executor" {
 
     vault_cert_bucket = "${var.vault_cert_bucket_name}"
 
+    disable_authentication = "${var.disable_authentication}"
+
     ethconnect_webhook_port        = "${var.ethconnect_webhook_port}"
     ethconnect_always_manage_nonce = "${var.ethconnect_always_manage_nonce}"
     ethconnect_max_in_flight       = "${var.ethconnect_max_in_flight}"

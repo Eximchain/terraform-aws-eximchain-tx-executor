@@ -48,6 +48,7 @@ module "transaction_executor" {
   aws_region                     = "${var.aws_region}"
   availability_zone              = "${var.availability_zone}"
   cert_owner                     = "${var.cert_owner}"
+  disable_authentication         = "${var.disable_authentication}"
   force_destroy_s3_buckets       = "${var.force_destroy_s3_buckets}"
   tx_executor_instance_type      = "${var.tx_executor_instance_type}"
   ethconnect_webhook_port        = "${var.ethconnect_webhook_port}"

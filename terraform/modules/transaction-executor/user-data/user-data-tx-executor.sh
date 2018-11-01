@@ -33,6 +33,7 @@ function write_data {
   echo "${mongo_collection_name}" | sudo tee /opt/transaction-executor/info/mongo-collection-name.txt > /dev/null 2>&1
   echo "${mongo_max_receipts}" | sudo tee /opt/transaction-executor/info/mongo-max-receipts.txt > /dev/null 2>&1
   echo "${mongo_query_limit}" | sudo tee /opt/transaction-executor/info/mongo-query-limit.txt > /dev/null 2>&1
+  echo "${disable_authentication}" | sudo tee /opt/transaction-executor/info/disable-authentication.txt > /dev/null 2>&1
 }
 
 function initialize_ccloud {

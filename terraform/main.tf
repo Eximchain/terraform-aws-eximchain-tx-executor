@@ -63,6 +63,10 @@ module "transaction_executor" {
   mongo_collection_name          = "${var.mongo_collection_name}"
   mongo_max_receipts             = "${var.mongo_max_receipts}"
   mongo_query_limit              = "${var.mongo_query_limit}"
+  ethconnect_api_cidrs           = "${var.ethconnect_api_cidrs}"
+  ethconnect_api_security_groups = "${var.ethconnect_api_security_groups}"
+  rpc_api_cidrs                  = "${var.rpc_api_cidrs}"
+  rpc_api_security_groups        = "${var.rpc_api_security_groups}"
 
   # Variables sourced from the vault module
   vault_dns                = "${module.tx_executor_vault.vault_dns}"

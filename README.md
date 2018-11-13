@@ -174,3 +174,15 @@ Instead, your Terraform state file has been partially updated with
 any resources that successfully completed. Please address the error
 above and apply again to incrementally change your infrastructure.
 ```
+
+# Architecture
+
+![Architecture Diagram](images/architecture.png "Architecture Diagram")
+
+This diagram shows the architecture of this infrastructure. It consists of three modules: a vault cluster, a cluster of eximchain nodes, and a single transaction executor instance.
+
+* The **eximchain nodes** join the network as geth peers and execute RPC transactions on the chain.
+
+* The **vault cluster** stores the keys for each node's primary account. It will also be used as a general purpose key management system, eventually allowing user keys to be stored on the vault and sign transactions from the vault.
+
+* The **transaction executor** exposes two ports: An RPC proxy on port `8080`, and an [ethconnect](https://github.com/kaleido-io/ethconnect) webhook bridge on port `8088`. Either of these can be used to interact with the chain, though the ethconnect API is distinct from the ethereum RPC protocol. The RPC proxy behaves exactly as a geth RPC port and currently just proxies requests to the nodes. This behavior may be further optimized in the future.  

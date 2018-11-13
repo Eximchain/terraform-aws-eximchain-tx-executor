@@ -11,7 +11,9 @@ Table of Contents
       * [Launch and configure vault](#launch-and-configure-vault)
          * [Unseal additional vault servers](#unseal-additional-vault-servers)
       * [Access Other Components](#access-other-components)
+      * [Example Ethconnect Test](#example-ethconnect-test)
       * [Destroy the Network](#destroy-the-network)
+   * [Architecture](#architecture)
 
 Created by [gh-md-toc](https://github.com/ekalinin/github-markdown-toc)
 

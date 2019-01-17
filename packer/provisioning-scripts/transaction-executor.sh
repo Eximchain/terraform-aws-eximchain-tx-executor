@@ -1,6 +1,8 @@
 #!/bin/bash
 set -eu -o pipefail
 
+RELEASE="public"
+
 BASH_PROFILE=/home/ubuntu/.bash_profile
 
 source $BASH_PROFILE
@@ -20,6 +22,8 @@ curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
 cd $GO_SRC
 git clone git@github.com:Eximchain/eximchain-transaction-executor.git
 cd eximchain-transaction-executor
+
+git checkout $RELEASE
 
 # Install Dependencies
 $GO_BIN/dep ensure

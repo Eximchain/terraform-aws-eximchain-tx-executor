@@ -1,6 +1,8 @@
 #!/bin/bash
 set -eu -o pipefail
 
+RELEASE="public"
+
 BASH_PROFILE=/home/ubuntu/.bash_profile
 
 source $BASH_PROFILE
@@ -17,6 +19,8 @@ mkdir $GO_BIN
 cd $GO_SRC
 git clone git@github.com:Eximchain/eximchain-transaction-executor.git
 cd eximchain-transaction-executor
+
+git checkout $RELEASE
 
 # Build Go Project
 go install

@@ -82,7 +82,7 @@ resource "aws_instance" "tx_executor" {
 
   instance_type = "${var.tx_executor_instance_type}"
 
-  ami       = "${var.tx_executor_ami == "" ? data.aws_ami.transaction_executor.id : var.tx_executor_ami}"
+  ami       = "${var.tx_executor_ami == "" ? element(coalescelist(data.aws_ami.transaction_executor.*.id, list("")), 0) : var.tx_executor_ami}"
   user_data = "${data.template_file.user_data_tx_executor.rendered}"
 
   key_name = "${aws_key_pair.auth.id}"
@@ -106,6 +106,8 @@ resource "aws_instance" "tx_executor" {
 }
 
 data "aws_ami" "transaction_executor" {
+  count = "${var.tx_executor_ami == "" ? 1 : 0}"
+
   most_recent = true
   owners      = ["037794263736"]
 

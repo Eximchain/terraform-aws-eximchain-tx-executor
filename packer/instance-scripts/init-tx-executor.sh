@@ -78,7 +78,7 @@ wait_for_successful_command 'vault auth -method=aws'
 
 wait_for_successful_command "vault write keys/singleton password=$GETH_PW address=$ADDRESS key=$PRIV_KEY"
 
-generate_ethconnect_supervisor_config
+#generate_ethconnect_supervisor_config
 
 # Replace the config that runs this with one that runs the tx-executor itself
 generate_tx_executor_supervisor_config

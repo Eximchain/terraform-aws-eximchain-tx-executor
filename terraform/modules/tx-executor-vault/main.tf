@@ -65,6 +65,8 @@ resource "aws_lb_listener" "tx_executor_vault" {
 }
 
 data "aws_ami" "vault_consul" {
+  count = "${var.vault_consul_ami == "" ? 1 : 0}"
+
   most_recent = true
   owners      = ["037794263736"]
 
@@ -149,7 +151,7 @@ module "consul_cluster" {
   cluster_tag_key   = "consul-cluster"
   cluster_tag_value = "transaction-executor-consul"
 
-  ami_id    = "${var.vault_consul_ami == "" ? data.aws_ami.vault_consul.id : var.vault_consul_ami}"
+  ami_id    = "${var.vault_consul_ami == "" ? element(coalescelist(data.aws_ami.vault_consul.*.id, list("")), 0) : var.vault_consul_ami}"
   user_data = "${data.template_file.user_data_consul.rendered}"
 
   vpc_id     = "${var.aws_vpc}"

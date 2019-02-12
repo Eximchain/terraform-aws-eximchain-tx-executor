@@ -58,6 +58,7 @@
       "provisioning-scripts/ccloud.sh",
       "provisioning-scripts/porosity.sh",
       "provisioning-scripts/quorum.sh",
+      "provisioning-scripts/certbot.sh",
       "provisioning-scripts/transaction-executor.sh"
     ]
   },{

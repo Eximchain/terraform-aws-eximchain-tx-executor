@@ -62,7 +62,19 @@ function ensure_ethconnect_topics_exist {
   fi
 }
 
+function get_ssl_certs {
+  # --cert-name arg fixes the path where the certificate is output so the client doesn't
+  # need to load in the domain
+  local readonly ENABLE_HTTPS=$(cat /opt/transaction-executor/info/enable-https.txt)
+  if [ "$ENABLE_HTTPS" == "true" ]
+  then
+    local readonly DOMAIN=$(cat /opt/transaction-executor/info/custom-domain.txt)
+    wait_for_successful_command "sudo certbot --cert-name tx-executor --nginx --noninteractive --agree-tos -m louis@eximchain.com -d $DOMAIN"
+  fi
+}
+
 ensure_ethconnect_topics_exist
+get_ssl_certs
 
 # Generate singleton geth keypair for testing
 GETH_PW=$(uuidgen -r)

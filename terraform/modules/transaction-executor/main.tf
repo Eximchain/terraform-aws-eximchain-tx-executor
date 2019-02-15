@@ -69,6 +69,27 @@ resource "aws_subnet" "tx_executor" {
 }
 
 # ---------------------------------------------------------------------------------------------------------------------
+# DNS RECORD
+# ---------------------------------------------------------------------------------------------------------------------
+locals {
+  using_custom_domain = "${var.subdomain_name != "" && var.root_domain != ""}"
+}
+
+data "aws_route53_zone" "domain" {
+  count = "${ local.using_custom_domain ? 1 : 0}"
+  name = "${var.root_domain}."
+}
+
+resource "aws_route53_record" "tx_executor" {
+  count = "${ local.using_custom_domain ? 1 : 0}"
+  zone_id                  = "${data.aws_route53_zone.domain.zone_id}"
+  name                     = "${var.subdomain_name}.${var.root_domain}"
+  type                     = "A"
+  ttl                      = "300"
+  records                  = ["${aws_instance.tx_executor.public_ip}"]
+}
+
+# ---------------------------------------------------------------------------------------------------------------------
 # TRANSACTION EXECUTOR NODE
 # ---------------------------------------------------------------------------------------------------------------------
 resource "aws_instance" "tx_executor" {
@@ -78,6 +99,8 @@ resource "aws_instance" "tx_executor" {
 
     # The connection will use the local SSH agent for authentication if this is empty.
     private_key = "${var.private_key}"
+
+    host = "${aws_instance.tx_executor.public_dns}"
   }
 
   instance_type = "${var.tx_executor_instance_type}"
@@ -150,6 +173,10 @@ data "template_file" "user_data_tx_executor" {
     mongo_collection_name     = "${var.mongo_collection_name}"
     mongo_max_receipts        = "${var.mongo_max_receipts}"
     mongo_query_limit         = "${var.mongo_query_limit}"
+
+    enable_https        = "${var.enable_https}"
+    using_custom_domain = "${local.using_custom_domain}"
+    custom_domain       = "${join("", list(var.subdomain_name,".",var.root_domain))}"
   }
 }
 
@@ -173,27 +200,53 @@ resource "aws_security_group_rule" "tx_executor_ssh" {
   cidr_blocks = ["0.0.0.0/0"]
 }
 
-resource "aws_security_group_rule" "tx_executor_rpc_cidr_access" {
+resource "aws_security_group_rule" "tx_executor_rpc_cidr_access_http" {
   count = "${length(var.rpc_api_cidrs) == 0 ? 0 : 1}"
 
   security_group_id = "${aws_security_group.tx_executor.id}"
   type              = "ingress"
 
-  from_port = 8080
-  to_port   = 8080
+  from_port = 80
+  to_port   = 80
   protocol  = "tcp"
 
   cidr_blocks = "${var.rpc_api_cidrs}"
 }
 
-resource "aws_security_group_rule" "tx_executor_rpc_security_group_access" {
+resource "aws_security_group_rule" "tx_executor_rpc_security_group_access_http" {
   count = "${length(var.rpc_api_security_groups)}"
 
   security_group_id = "${aws_security_group.tx_executor.id}"
   type              = "ingress"
 
-  from_port = 8080
-  to_port   = 8080
+  from_port = 80
+  to_port   = 80
+  protocol  = "tcp"
+
+  source_security_group_id = "${element(var.rpc_api_security_groups, count.index)}"
+}
+
+resource "aws_security_group_rule" "tx_executor_rpc_cidr_access_https" {
+  count = "${length(var.rpc_api_cidrs) == 0 ? 0 : 1}"
+
+  security_group_id = "${aws_security_group.tx_executor.id}"
+  type              = "ingress"
+
+  from_port = 443
+  to_port   = 443
+  protocol  = "tcp"
+
+  cidr_blocks = "${var.rpc_api_cidrs}"
+}
+
+resource "aws_security_group_rule" "tx_executor_rpc_security_group_access_https" {
+  count = "${length(var.rpc_api_security_groups)}"
+
+  security_group_id = "${aws_security_group.tx_executor.id}"
+  type              = "ingress"
+
+  from_port = 443
+  to_port   = 443
   protocol  = "tcp"
 
   source_security_group_id = "${element(var.rpc_api_security_groups, count.index)}"

@@ -85,6 +85,10 @@ module "transaction_executor" {
   base_subnet_cidr = "${cidrsubnet(var.vpc_cidr, 2, 0)}"
 
   tx_executor_ami = "${var.tx_executor_ami}"
+
+  enable_https   = "${var.enable_https}"
+  subdomain_name = "${var.subdomain_name}"
+  root_domain    = "${var.root_domain}"
 }
 
 module "tx_executor_vault" {

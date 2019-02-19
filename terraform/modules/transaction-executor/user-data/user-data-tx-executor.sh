@@ -54,6 +54,8 @@ function initialize_ccloud {
 function write_nginx_config {
   sudo rm -rf /etc/nginx/sites-enabled/default
   local readonly HOSTNAME="$(curl http://169.254.169.254/latest/meta-data/public-hostname)"
+  local readonly HTTP_PORT="80"
+  local readonly GOKIT_URL="http://localhost:8080"
   if [ "${using_custom_domain}" == "true" ]
   then
     local readonly SERVER_NAME="${custom_domain} $HOSTNAME"
@@ -62,10 +64,10 @@ function write_nginx_config {
   fi
   echo "
   server {
-    listen 80;
+    listen $HTTP_PORT;
     server_name $SERVER_NAME;
     location / {
-      proxy_pass \"http://localhost:8080\";
+      proxy_pass \"$GOKIT_URL\";
     }
   }" | sudo tee /etc/nginx/sites-available/tx-executor > /dev/null 2>&1
   sudo ln -s /etc/nginx/sites-available/tx-executor /etc/nginx/sites-enabled/tx-executor

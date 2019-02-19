@@ -210,7 +210,7 @@ variable "enable_https" {
 
 variable "subdomain_name" {
   description = "Required if using HTTPS; the [value] in the final '[value].[root_domain]` DNS name."
-  default = ""
+  default     = ""
 }
 
 variable "root_domain" {

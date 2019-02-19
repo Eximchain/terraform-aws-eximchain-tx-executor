@@ -76,12 +76,13 @@ locals {
 }
 
 data "aws_route53_zone" "domain" {
-  count = "${ local.using_custom_domain ? 1 : 0}"
+  count = "${local.using_custom_domain ? 1 : 0}"
   name = "${var.root_domain}."
 }
 
 resource "aws_route53_record" "tx_executor" {
-  count = "${ local.using_custom_domain ? 1 : 0}"
+  count = "${local.using_custom_domain ? 1 : 0}"
+
   zone_id                  = "${data.aws_route53_zone.domain.zone_id}"
   name                     = "${var.subdomain_name}.${var.root_domain}"
   type                     = "A"

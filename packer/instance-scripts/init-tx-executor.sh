@@ -63,13 +63,16 @@ function ensure_ethconnect_topics_exist {
 }
 
 function get_ssl_certs {
-  # --cert-name arg fixes the path where the certificate is output so the client doesn't
-  # need to load in the domain
   local readonly ENABLE_HTTPS=$(cat /opt/transaction-executor/info/enable-https.txt)
   if [ "$ENABLE_HTTPS" == "true" ]
   then
+    # LetsEncrypt requires a webmaster email in case of issues.  Must specify custom domain
+    # we want certs for.  Note that we only use custom b/c they don't give certs to .amazonaws.com
+    # domains.  Including the --cert-name option ensures that we know what directory the keys
+    # are placed in, and it tells LetsEncrypt which nginx config to update.
+    local readonly CERT_WEBMASTER="louis@eximchain.com"
     local readonly DOMAIN=$(cat /opt/transaction-executor/info/custom-domain.txt)
-    wait_for_successful_command "sudo certbot --cert-name tx-executor --nginx --noninteractive --agree-tos -m louis@eximchain.com -d $DOMAIN"
+    wait_for_successful_command "sudo certbot --cert-name tx-executor --nginx --noninteractive --agree-tos -m $CERT_WEBMASTER -d $DOMAIN"
   fi
 }
 

@@ -74,6 +74,7 @@ resource "aws_subnet" "tx_executor" {
 locals {
   using_custom_domain = "${var.subdomain_name != "" && var.root_domain != ""}"
   custom_domain       = "${var.subdomain_name}.${var.root_domain}"
+  using_https         = "${var.enable_https == "true"}"
 }
 
 data "aws_route53_zone" "domain" {
@@ -240,7 +241,7 @@ resource "aws_security_group_rule" "tx_executor_rpc_security_group_access_http" 
 }
 
 resource "aws_security_group_rule" "tx_executor_rpc_cidr_access_https" {
-  count = "${length(var.rpc_api_cidrs) == 0 ? 0 : 1}"
+  count = "${local.using_https && length(var.rpc_api_cidrs) > 0 ? 1 : 0}"
 
   security_group_id = "${aws_security_group.tx_executor.id}"
   type              = "ingress"
@@ -253,7 +254,7 @@ resource "aws_security_group_rule" "tx_executor_rpc_cidr_access_https" {
 }
 
 resource "aws_security_group_rule" "tx_executor_rpc_security_group_access_https" {
-  count = "${length(var.rpc_api_security_groups)}"
+  count = "${local.using_https ? length(var.rpc_api_security_groups) : 0}"
 
   security_group_id = "${aws_security_group.tx_executor.id}"
   type              = "ingress"

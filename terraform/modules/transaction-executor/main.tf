@@ -73,18 +73,19 @@ resource "aws_subnet" "tx_executor" {
 # ---------------------------------------------------------------------------------------------------------------------
 locals {
   using_custom_domain = "${var.subdomain_name != "" && var.root_domain != ""}"
+  custom_domain       = "${var.subdomain_name}.${var.root_domain}"
 }
 
 data "aws_route53_zone" "domain" {
   count = "${local.using_custom_domain ? 1 : 0}"
-  name = "${var.root_domain}."
+  name  = "${var.root_domain}."
 }
 
 resource "aws_route53_record" "tx_executor" {
   count = "${local.using_custom_domain ? 1 : 0}"
 
   zone_id                  = "${data.aws_route53_zone.domain.zone_id}"
-  name                     = "${var.subdomain_name}.${var.root_domain}"
+  name                     = "${local.custom_domain}"
   type                     = "A"
   ttl                      = "300"
   records                  = ["${aws_instance.tx_executor.public_ip}"]
@@ -101,6 +102,7 @@ resource "aws_instance" "tx_executor" {
     # The connection will use the local SSH agent for authentication if this is empty.
     private_key = "${var.private_key}"
 
+    # Must explicitly specify host, auto-inference fails for destroy-time provisioner
     host = "${aws_instance.tx_executor.public_dns}"
   }
 
@@ -135,7 +137,7 @@ resource "aws_instance" "tx_executor" {
     when = "destroy"
     inline = [
       "echo AWS VPC Route ID is ${var.aws_route}, ensuring it still exists for revoking certificates",
-      "/opt/transaction-executor/bin/revoke-https-cert.sh || true"
+      "/opt/transaction-executor/bin/revoke-https-cert.sh"
     ]
   }
 }
@@ -187,7 +189,7 @@ data "template_file" "user_data_tx_executor" {
 
     enable_https        = "${var.enable_https}"
     using_custom_domain = "${local.using_custom_domain}"
-    custom_domain       = "${join("", list(var.subdomain_name,".",var.root_domain))}"
+    custom_domain       = "${local.custom_domain}"
   }
 }
 

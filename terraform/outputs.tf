@@ -1,5 +1,9 @@
-output "transaction_executor_dns" {
-  value = "${module.transaction_executor.transaction_executor_dns}"
+output "transaction_executor_custom_dns" {
+  value = "${module.transaction_executor.transaction_executor_custom_dns}"
+}
+
+output "transaction_executor_direct_dns" {
+  value = "${module.transaction_executor.transaction_executor_direct_dns}"
 }
 
 output "vault_server_ips" {

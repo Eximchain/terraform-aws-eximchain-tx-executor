@@ -14,6 +14,10 @@ variable "aws_vpc" {
   description = "The VPC to create the transaction executor in"
 }
 
+variable "aws_route" {
+  description = "The ID of the required route in the aws_vpc routing table.  Enforces networking dependency."
+}
+
 variable "public_key" {
   description = "The public key that will be used to SSH the instances in this region."
 }

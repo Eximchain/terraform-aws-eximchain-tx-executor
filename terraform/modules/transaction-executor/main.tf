@@ -128,6 +128,16 @@ resource "aws_instance" "tx_executor" {
       "echo 'http://${var.quorum_dns}:${var.quorum_port}' > /opt/transaction-executor/info/quorum-url.txt"
     ]
   }
+
+  depends_on = ["aws_security_group_rule.tx_executor_ssh","aws_security_group_rule.tx_executor_egress"]
+
+  provisioner "remote-exec" {
+    when = "destroy"
+    inline = [
+      "echo AWS VPC Route ID is ${var.aws_route}, ensuring it still exists for revoking certificates",
+      "/opt/transaction-executor/bin/revoke-https-cert.sh || true"
+    ]
+  }
 }
 
 data "aws_ami" "transaction_executor" {

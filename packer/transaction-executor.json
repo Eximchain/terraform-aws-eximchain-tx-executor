@@ -70,10 +70,15 @@
     "source": "instance-scripts/init-tx-executor.sh",
     "destination": "/tmp/init-tx-executor.sh"
   },{
+    "type": "file",
+    "source": "instance-scripts/revoke-https-cert.sh",
+    "destination": "/tmp/revoke-https-cert.sh"
+  },{
     "type": "shell",
     "inline": [
-      "sudo mv /tmp/init-tx-executor.sh /opt/transaction-executor/bin/",
       "sudo mv /tmp/generate-run-init-tx-executor /opt/transaction-executor/bin/",
+      "sudo mv /tmp/init-tx-executor.sh /opt/transaction-executor/bin/",
+      "sudo mv /tmp/revoke-https-cert.sh /opt/transaction-executor/bin/",
       "sudo chmod 744 /opt/transaction-executor/bin/*"
     ]
   }],

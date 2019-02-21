@@ -34,8 +34,6 @@ function write_data {
   echo "${mongo_max_receipts}" | sudo tee /opt/transaction-executor/info/mongo-max-receipts.txt > /dev/null 2>&1
   echo "${mongo_query_limit}" | sudo tee /opt/transaction-executor/info/mongo-query-limit.txt > /dev/null 2>&1
   echo "${disable_authentication}" | sudo tee /opt/transaction-executor/info/disable-authentication.txt > /dev/null 2>&1
-  echo "${custom_domain}" | sudo tee /opt/transaction-executor/info/custom-domain.txt > /dev/null 2>&1
-  echo "${enable_https}" | sudo tee /opt/transaction-executor/info/enable-https.txt > /dev/null 2>&1
 }
 
 function initialize_ccloud {
@@ -49,29 +47,6 @@ function initialize_ccloud {
   else
     echo "No Confluence Cloud configuration data found, skipping ccloud config."
   fi
-}
-
-function write_nginx_config {
-  sudo rm -rf /etc/nginx/sites-enabled/default
-  local readonly HOSTNAME="$(curl http://169.254.169.254/latest/meta-data/public-hostname)"
-  local readonly HTTP_PORT="80"
-  local readonly GOKIT_URL="http://localhost:8080"
-  if [ "${using_custom_domain}" == "true" ]
-  then
-    local readonly SERVER_NAME="${custom_domain} $HOSTNAME"
-  else
-    local readonly SERVER_NAME="$HOSTNAME"
-  fi
-  echo "
-  server {
-    listen $HTTP_PORT;
-    server_name $SERVER_NAME;
-    location / {
-      proxy_pass \"$GOKIT_URL\";
-    }
-  }" | sudo tee /etc/nginx/sites-available/tx-executor > /dev/null 2>&1
-  sudo ln -s /etc/nginx/sites-available/tx-executor /etc/nginx/sites-enabled/tx-executor
-  sudo service nginx restart
 }
 
 function write_ethconnect_config {
@@ -187,7 +162,6 @@ download_vault_certs
 write_data
 initialize_ccloud
 write_ethconnect_config
-write_nginx_config
 
 # These variables are passed in via Terraform template interpolation
 /opt/consul/bin/run-consul --client --cluster-tag-key "${consul_cluster_tag_key}" --cluster-tag-value "${consul_cluster_tag_value}"

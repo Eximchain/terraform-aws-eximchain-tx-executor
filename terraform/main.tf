@@ -42,9 +42,6 @@ module "transaction_executor" {
   # Source from github if using in another project
   source = "modules/transaction-executor"
 
-  # Ensure the VPC Route is preserved for certificate revocation during instance destroy
-  aws_route = "${aws_route.tx_executor.id}"
-
   # Variables sourced from terraform.tfvars
   public_key                     = "${var.public_key == "" ? join("", data.local_file.public_key.*.content) : var.public_key}"
   private_key                    = "${var.private_key}"
@@ -88,10 +85,6 @@ module "transaction_executor" {
   base_subnet_cidr = "${cidrsubnet(var.vpc_cidr, 2, 0)}"
 
   tx_executor_ami = "${var.tx_executor_ami}"
-
-  enable_https   = "${var.enable_https}"
-  subdomain_name = "${var.subdomain_name}"
-  root_domain    = "${var.root_domain}"
 }
 
 module "tx_executor_vault" {
